@@ -1,6 +1,6 @@
 {
   "name": "bumper-brigade",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "private": true,
   "description": "A tiny 1\u201310 player vehicle battle racer",
   "type": "module",

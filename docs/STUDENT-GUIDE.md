@@ -42,3 +42,13 @@ Find the scoring and damage code in `public/physics.js`. For example, `explode` 
 Extract the ZIP, install Node, run `npm ci`, then `npm test` and `npm start`. The lockfile records the exact dependency versions. All visible art and sound are produced by code. You do not need an art subscription, API key, game engine subscription or paid asset pack to run it.
 
 Once you change browser files, run `npm run build:mobile -- --native` again before building phone apps. Remove old website service-worker caches when checking a new version, or use a private window.
+
+
+### Driving view and personal settings
+Races open in a view from behind your vehicle. The road, rivals and obstacles get smaller as they move farther away. This is drawn with Canvas; the game still uses the same small 2D physics engine. Map view switches back to the overhead view.
+
+Open Settings in the garage or during a race. Change camera height, distance, view angle and zoom. Select a keyboard field and press a new key to assign it. Each action needs a different key. Arrow keys also operate steering and pedals. Your choices are saved on this device. Reset restores the camera and keys. On phones the left circle steers, with Gas, Brake, Drift, Boost and Bonk on the right.
+
+Choose a time limit between 30 and 1800 whole seconds in the garage. In a friend room, only the host changes the shared limit before starting. This is the maximum time: three laps can finish the race earlier, with the existing 12-second finish countdown. Camera and keys are personal; they do not change other players' views. Settings pause solo races, while online races keep running.
+
+To replicate this feature, read `public/settings.js` for saved preferences and validation, `public/chase.js` for perspective drawing, `public/app.js` for screen controls, and `server.mjs` for the host's shared timer. Run `npm ci`, then `npm test`, then `npm start`.

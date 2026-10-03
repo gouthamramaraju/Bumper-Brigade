@@ -36,3 +36,13 @@ Read [the student guide](docs/STUDENT-GUIDE.md). Run `npm test` to check physics
 The downloadable source ZIP includes generated Android and iOS project sources in `mobile/`. In a GitHub checkout, generate them with `npm run build:mobile -- --native`. They are unsigned and have not been compiled or published. See [release steps](docs/RELEASE.md). See [testing](docs/TESTING.md) for checks you should do before release and [GitHub](docs/GITHUB.md) to publish the source.
 
 Original game code is MIT licensed. Keep the licence and third-party notices when sharing it.
+
+
+### Driving view and personal settings
+Races open in a view from behind your vehicle. The road, rivals and obstacles get smaller as they move farther away. This is drawn with Canvas; the game still uses the same small 2D physics engine. Map view switches back to the overhead view.
+
+Open Settings in the garage or during a race. Change camera height, distance, view angle and zoom. Select a keyboard field and press a new key to assign it. Each action needs a different key. Arrow keys also operate steering and pedals. Your choices are saved on this device. Reset restores the camera and keys. On phones the left circle steers, with Gas, Brake, Drift, Boost and Bonk on the right.
+
+Choose a time limit between 30 and 1800 whole seconds in the garage. In a friend room, only the host changes the shared limit before starting. This is the maximum time: three laps can finish the race earlier, with the existing 12-second finish countdown. Camera and keys are personal; they do not change other players' views. Settings pause solo races, while online races keep running.
+
+To replicate this feature, read `public/settings.js` for saved preferences and validation, `public/chase.js` for perspective drawing, `public/app.js` for screen controls, and `server.mjs` for the host's shared timer. Run `npm ci`, then `npm test`, then `npm start`.

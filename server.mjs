@@ -1,3 +1,4 @@
+import {validDuration} from './public/settings.js';
 // The server accepts controls, runs the rules, and sends one shared state to everyone.
 import http from 'node:http';
 import {readFile} from 'node:fs/promises';
@@ -8,7 +9,7 @@ import {WebSocketServer,WebSocket} from 'ws';
 import {createMatch,setInput,step,maps,vehicles} from './public/physics.js';
 const publicRoot=fileURLToPath(new URL('./public/',import.meta.url));
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.json':'application/json'};
-const allowedFiles=new Set(['index.html','style.css','app.js','physics.js','maps.js','vehicles.js','render.js','audio.js','icon.svg','manifest.json','sw.js','config.js','joystick.js']);
+const allowedFiles=new Set(['index.html','style.css','app.js','physics.js','maps.js','vehicles.js','render.js','audio.js','icon.svg','manifest.json','sw.js','config.js','joystick.js','chase.js','settings.js']);
 export function createArcadeServer({maxRooms=100,maxConnections=1000,allowedOrigins=[]}={}){
   const rooms=new Map(),clients=new Set(),byIp=new Map();
   const server=http.createServer(async(req,res)=>{
@@ -32,7 +33,7 @@ export function createArcadeServer({maxRooms=100,maxConnections=1000,allowedOrig
   });
   const send=(c,data)=>{if(c.ws.readyState===WebSocket.OPEN){if(c.ws.bufferedAmount>256000){c.ws.close(1008,'Connection too slow');return;}c.ws.send(JSON.stringify(data));}};
   const error=(c,message)=>send(c,{type:'error',message});
-  const view=r=>({type:'room',code:r.code,mapId:r.mapId,host:r.host,status:r.status,startsAt:r.startsAt||null,players:[...r.members.values()].map(c=>({id:c.id,name:c.name,vehicle:c.vehicle})),match:r.match});
+  const view=r=>({type:'room',code:r.code,mapId:r.mapId,duration:r.duration,host:r.host,status:r.status,startsAt:r.startsAt||null,players:[...r.members.values()].map(c=>({id:c.id,name:c.name,vehicle:c.vehicle})),match:r.match});
   const broadcast=r=>{const data=view(r);for(const c of r.members.values())send(c,data);};
   function leave(c){
     const r=rooms.get(c.room);c.room=null;if(!r)return;r.members.delete(c.id);
@@ -60,7 +61,8 @@ export function createArcadeServer({maxRooms=100,maxConnections=1000,allowedOrig
           if(!maps[m.mapId]){error(c,'Choose a valid map.');return;}
           if(rooms.size>=maxRooms){error(c,'Server is full. Try later.');return;}
           let code;do{code=randomBytes(3).toString('hex').toUpperCase();}while(rooms.has(code));
-          target={code,mapId:m.mapId,host:c.id,members:new Map(),status:'lobby',match:null,changed:now};rooms.set(code,target);
+          if(m.duration!==undefined&&!validDuration(m.duration)){error(c,'Choose 30–1800 whole seconds.');return;}
+          target={code,mapId:m.mapId,duration:m.duration??120,host:c.id,members:new Map(),status:'lobby',match:null,changed:now};rooms.set(code,target);
         }else{
           target=rooms.get(typeof m.code==='string'?m.code.trim().toUpperCase():'');
           if(!target){error(c,'Room not found. Check the six-character code.');return;}
@@ -85,6 +87,12 @@ export function createArcadeServer({maxRooms=100,maxConnections=1000,allowedOrig
         if(r.status==='playing'||r.status==='countdown'){error(c,'Choose your vehicle between races.');return;}
         c.vehicle=m.vehicle;broadcast(r);return;
       }
+      if(m.type==='duration'){
+        if(r.host!==c.id){error(c,'Only the host can change the time limit.');return;}
+        if(r.status==='playing'||r.status==='countdown'){error(c,'Wait for the round to finish.');return;}
+        if(!validDuration(m.duration)){error(c,'Choose 30–1800 whole seconds.');return;}
+        r.duration=m.duration;r.match=null;r.status='lobby';broadcast(r);return;
+      }
       if(m.type==='map'){
         if(r.host!==c.id){error(c,'Only the host can change maps.');return;}
         if(!maps[m.mapId]){error(c,'Unknown map.');return;}
@@ -100,7 +108,7 @@ export function createArcadeServer({maxRooms=100,maxConnections=1000,allowedOrig
   const timer=setInterval(()=>{
     const now=Date.now();tick++;
     for(const r of rooms.values()){
-      if(r.status==='countdown' && now>=r.startsAt){r.match=createMatch(r.mapId,[...r.members.values()].map(c=>({id:c.id,name:c.name,vehicle:c.vehicle})),randomBytes(4).readUInt32LE());r.status='playing';broadcast(r);}
+      if(r.status==='countdown' && now>=r.startsAt){r.match=createMatch(r.mapId,[...r.members.values()].map(c=>({id:c.id,name:c.name,vehicle:c.vehicle})),randomBytes(4).readUInt32LE(),{duration:r.duration});r.status='playing';broadcast(r);}
       if(r.status==='playing'){
         for(const c of r.members.values())if(now-c.lastInput>400)setInput(r.match,c.id,{steer:0,throttle:0});
         step(r.match,1/30);if(r.match.status==='finished')r.status='finished';if(tick%2===0 || r.status==='finished')broadcast(r);

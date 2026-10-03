@@ -1,3 +1,4 @@
+import {drawChase} from './chase.js';
 import {maps,headingAt,pointAt} from './maps.js';
 import {vehicles} from './vehicles.js';
 const TAU=Math.PI*2;
@@ -62,8 +63,9 @@ export class Renderer{
   constructor(canvas,{createCanvas=null}={}){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.mapCanvas=null;this.cachedMap=null;this.createCanvas=createCanvas||(()=>document.createElement('canvas'));this.camera={x:800,y:550,zoom:1};this.particles=[];this.trails=[];this.seen=0;this.shake=0;this.flash=0;this.lastTime=0;this.positions=new Map();}
   reset(){this.seen=0;this.particles=[];this.trails=[];this.positions.clear();this.cachedMap=null;this.lastTime=0;}
   mapImage(map){if(this.cachedMap!==map.id){this.mapCanvas=this.createCanvas(map.width,map.height);this.mapCanvas.width=map.width;this.mapCanvas.height=map.height;drawMap(this.mapCanvas.getContext('2d'),map);this.cachedMap=map.id;}return this.mapCanvas;}
-  draw(s,me,{overview=false,dt=1/60,smooth=false}={}){
+  draw(s,me,{overview=false,chase=false,camera={},dt=1/60,smooth=false}={}){
     const c=this.ctx,w=this.canvas.width,h=this.canvas.height,map=maps[s.mapId],mine=s.players.find(p=>p.id===me)||s.players[0];if(!mine)return;
+    if(chase&&!overview){const angle=mine.angle+(camera.angle||0)*Math.PI/180,behind=camera.distance||125;this.chaseCamera={x:mine.x-Math.cos(angle)*behind,y:mine.y-Math.sin(angle)*behind,angle,height:camera.height||82,zoom:camera.zoom||1};drawChase(c,s,mine,w,h,this.chaseCamera);return;}
     this.shake=Math.max(0,this.shake-dt*26);this.flash=Math.max(0,this.flash-dt*4);
     for(const e of s.events){if(e.id<=this.seen)continue;this.seen=Math.max(this.seen,e.id);if(e.type==='explode'||e.type==='bonk'||e.type==='rocket'||e.type==='hit'||e.type==='pulse'||e.type==='respawn'){
       const n=e.type==='explode'?36:e.type==='pulse'?24:9;for(let i=0;i<n;i++){const a=i*TAU/n,v=e.type==='explode'?80+i%7*25:60+i%5*18;this.particles.push({x:e.x,y:e.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:e.type==='explode'?.85:.45,max:e.type==='explode'?.85:.45,color:i%3?e.color:'#fff5d6',size:e.type==='explode'?3+i%5:3});}
