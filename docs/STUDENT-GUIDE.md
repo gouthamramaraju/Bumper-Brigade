@@ -82,3 +82,9 @@ The animals are original solid 3D models, with running or hopping legs, body bou
 Animal meshes use the existing road elevation, camera and multiplayer state. No model files, textures or image downloads are needed. The garage uses one shared preview renderer to avoid creating nine graphics contexts on a phone. Devices without WebGL still show a warning and a compatibility silhouette. Actual animal motion, visual quality and performance should be checked on an iPhone and Android device.
 
 To inspect geometry, run `node scripts/preview-3d.mjs fox` or use `rabbit`, `bear`, `deer`, `elephant` or a vehicle ID. This creates a CPU projection of the actual scene data, not a browser screenshot.
+
+
+### Tilt steering
+Open Settings, hold the phone in a comfortable driving position, and tap **Enable tilt**. Allow motion access if asked. Tilt left or right; gas/run and brake/slow stay on the right. Tap **Calibrate straight ahead** to make your current phone position neutral. Lower the full-steering degrees for stronger sensitivity. Rotate the phone and it automatically finds a new neutral position. The circle and keyboard always remain available; dragging the circle overrides tilt. If motion access is blocked or sensor readings stop, tilt returns zero steering.
+
+For students: `public/tilt.js` converts phone sensor readings to the same steering number the game already uses. No sensor data is sent to the server. Test on a real iPhone and Android over HTTPS: permission allowed/denied, both landscape directions, portrait, calibration, app switching, gas/brake while tilting, and multiplayer. Automated tests cannot verify a physical phone's sensor feel.

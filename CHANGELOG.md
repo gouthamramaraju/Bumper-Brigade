@@ -1,3 +1,10 @@
+## 0.8.0 — Tilt steering
+
+- Phone tilt steering with motion permission, calibration, dead zone and adjustable sensitivity.
+- Both screen orientations supported; circle fallback and right-side pedals retained.
+- Backgrounded or stale sensors stop steering. No extra dependencies.
+- 51 automated tests passed; physical-phone steering feel still requires device testing.
+
 # Changes
 
 ## 0.7.0

@@ -1,0 +1,8 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {screenTilt,tiltAxis,mountTilt} from '../public/tilt.js';
+test('Portrait and both landscape rotations steer consistently',()=>{assert.equal(screenTilt(20,10,0),10);assert.ok(Math.abs(screenTilt(20,10,90)-20)<1e-9);assert.ok(Math.abs(screenTilt(20,10,270)+20)<1e-9);assert.ok(Math.abs(screenTilt(20,10,180)+10)<1e-9);});
+test('Dead zone, calibration, sensitivity and angle wrap',()=>{assert.equal(tiltAxis(12,10),0);assert.equal(tiltAxis(35,10),1);assert.equal(tiltAxis(-15,10),-1);assert.equal(tiltAxis(-179,179),0);assert.ok(tiltAxis(20,0,10)>tiltAxis(20,0,45));});
+function phone(permission='granted'){const events={};return {events,isSecureContext:true,DeviceOrientationEvent:{requestPermission:async()=>permission},screen:{orientation:{angle:0,addEventListener(){}}},document:{addEventListener(){}},addEventListener:(name,fn)=>events[name]=fn};}
+test('Permission, initial calibration, stale data and background reset',async()=>{let time=10;const w=phone(),t=mountTilt(w,()=>{},()=>time);assert.equal(await t.enable(),true);w.events.deviceorientation({beta:0,gamma:10});assert.ok(t.ready);assert.equal(t.steer(25),0);w.events.deviceorientation({beta:0,gamma:35});assert.ok(t.steer(25)>0);assert.ok(t.calibrate());assert.equal(t.steer(25),0);time+=1001;assert.equal(t.steer(25),0);assert.equal(t.ready,false);w.events.blur();assert.equal(t.calibrate(),false);});
+test('Denied, unsupported and failed permission leave fallback usable',async()=>{for(const w of [phone('denied'),{...phone(),DeviceOrientationEvent:null},{...phone(),DeviceOrientationEvent:{requestPermission:async()=>{throw Error();}}}]){const t=mountTilt(w);assert.equal(await t.enable(),false);assert.equal(t.steer(25),0);}});
