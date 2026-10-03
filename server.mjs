@@ -9,7 +9,7 @@ import {WebSocketServer,WebSocket} from 'ws';
 import {createMatch,setInput,step,maps,vehicles} from './public/physics.js';
 const publicRoot=fileURLToPath(new URL('./public/',import.meta.url));
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.json':'application/json'};
-const allowedFiles=new Set(['index.html','style.css','app.js','physics.js','maps.js','vehicles.js','render.js','audio.js','icon.svg','manifest.json','sw.js','config.js','joystick.js','chase.js','settings.js','three-d.js','endless.js']);
+const allowedFiles=new Set(['index.html','style.css','app.js','physics.js','maps.js','vehicles.js','render.js','audio.js','icon.svg','manifest.json','sw.js','config.js','joystick.js','chase.js','settings.js','three-d.js','endless.js','landscape.js','vehicle-models.js']);
 export function createArcadeServer({maxRooms=100,maxConnections=1000,allowedOrigins=[]}={}){
   const rooms=new Map(),clients=new Set(),byIp=new Map();
   const server=http.createServer(async(req,res)=>{
@@ -62,7 +62,7 @@ export function createArcadeServer({maxRooms=100,maxConnections=1000,allowedOrig
           if(rooms.size>=maxRooms){error(c,'Server is full. Try later.');return;}
           let code;do{code=randomBytes(3).toString('hex').toUpperCase();}while(rooms.has(code));
           if(m.duration!==undefined&&!validDuration(m.duration)){error(c,'Choose 30–1800 whole seconds.');return;}
-          target={code,mapId:m.mapId,duration:m.duration??120,mode:m.mode==='endless'?'endless':'circuit',host:c.id,members:new Map(),status:'lobby',match:null,changed:now};rooms.set(code,target);
+          target={code,mapId:m.mapId,duration:m.duration??120,mode:['endless','scenic'].includes(m.mode)?m.mode:'circuit',host:c.id,members:new Map(),status:'lobby',match:null,changed:now};rooms.set(code,target);
         }else{
           target=rooms.get(typeof m.code==='string'?m.code.trim().toUpperCase():'');
           if(!target){error(c,'Room not found. Check the six-character code.');return;}
@@ -90,7 +90,7 @@ export function createArcadeServer({maxRooms=100,maxConnections=1000,allowedOrig
       if(m.type==='mode'){
         if(r.host!==c.id){error(c,'Only the host can change track style.');return;}
         if(r.status==='playing'||r.status==='countdown'){error(c,'Wait for the round to finish.');return;}
-        if(!['circuit','endless'].includes(m.mode)){error(c,'Unknown track style.');return;}
+        if(!['circuit','endless','scenic'].includes(m.mode)){error(c,'Unknown track style.');return;}
         r.mode=m.mode;r.match=null;r.status='lobby';broadcast(r);return;
       }
       if(m.type==='duration'){

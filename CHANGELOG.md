@@ -1,5 +1,12 @@
 # Changes
 
+## 0.6.0
+- Scenic Drive with rolling hills, road elevation and no timer, hazards, weapons or vehicle damage.
+- Cleaner scenic HUD and chase, hood or driver camera options.
+- Original shaped vehicle meshes with tire rims, windows, mirrors, lamps and reflective highlights.
+- Cached landscape sections and depth-tested CPU geometry preview for inspection.
+- Scenic physics, terrain continuity and 3D mesh tests.
+
 ## 0.5.0
 - Real WebGL 3D vehicle meshes, lit scenery, depth testing and smooth chase camera.
 - Complete Circuit and procedural Endless modes, selected by the host in multiplayer.

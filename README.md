@@ -56,3 +56,13 @@ Endless does not have a finish line. Its distance display shows your farthest fo
 The renderer is `public/three-d.js`: it builds small coloured meshes and sends their triangles to WebGL. It needs no 3D model or texture downloads. `public/endless.js` describes the road using simple sine curves and deterministic obstacle positions; the browser and server use the same functions. Circuit geometry is rendered in full. Endless renders a moving road window from behind the driver to far ahead, fading naturally into the horizon.
 
 Test both styles, turning and braking, every vehicle, settings, portrait and landscape. A device needs WebGL for 3D; unsupported devices show a warning and use the older 2D fallback. Physical iPhone and Android performance still needs testing.
+
+
+### Scenic Drive and richer vehicle models (0.6.0)
+Scenic Drive is an untimed cruise inspired by the feel of scenic driving games. Choose it under Track style. It keeps generating road through rolling hills, without weapons, damage, road hazards or a race finish. Multiplayer hosts can also select it. Circuit and Endless Battle keep their existing rules and timers.
+
+The road, terrain, vehicles and camera share the same elevation functions in `public/landscape.js`. The camera follows the road grade. Landscape meshes are cached until you move into another road section, which reduces repeated work. In Settings, choose behind-the-vehicle, hood or driver camera. Scenic Drive hides the combat HUD to leave more of the road visible.
+
+`public/vehicle-models.js` builds original solid models: shaped car body and cabin, wheel rims, lamps and mirrors; bus windows and extra wheels; bike frame, engine, tires and rider; spaceship wings, canopy and thrusters. Lit surfaces have a small specular highlight. These are compact procedural models, not photorealistic scanned models or images. No model or texture downloads are needed.
+
+Run `node scripts/preview-3d.mjs` to project the real mesh and camera data into a CPU-rendered inspection image. This verifies geometry framing and depth; it does not verify browser shader compilation. WebGL appearance and phone performance still need a device test.

@@ -12,6 +12,6 @@ try{const old=JSON.parse(await readFile(path.join(target,'capacitor.config.json'
 await cp(path.join(root,'public'),path.join(target,'www'),{recursive:true});
 await writeFile(path.join(target,'www','config.js'),`export const config=${JSON.stringify({serverUrl})};\n`);
 await writeFile(path.join(target,'capacitor.config.json'),JSON.stringify({appId,appName:'Bumper Brigade',webDir:'www',server:{androidScheme:'https'}},null,2)+'\n');
-await writeFile(path.join(target,'package.json'),JSON.stringify({name:'bumper-brigade-native',version:'0.5.0',type:'module',private:true,dependencies:{'@capacitor/core':'8.5.2','@capacitor/android':'8.5.2','@capacitor/ios':'8.5.2'}},null,2)+'\n');
+await writeFile(path.join(target,'package.json'),JSON.stringify({name:'bumper-brigade-native',version:'0.6.0',type:'module',private:true,dependencies:{'@capacitor/core':'8.5.2','@capacitor/android':'8.5.2','@capacitor/ios':'8.5.2'}},null,2)+'\n');
 if(process.argv.includes('--native')){const cli=path.join(root,'node_modules','@capacitor','cli','bin','capacitor');for(const platform of ['android','ios']){let exists=true;try{await access(path.join(target,platform));}catch{exists=false;}const r=spawnSync(process.execPath,[cli,exists?'sync':'add',platform],{cwd:target,stdio:'inherit'});if(r.status!==0)throw new Error(`Native ${platform} generation failed.`);}}
 console.log('Bumper Brigade mobile source prepared.');if(!serverUrl)console.log('Solo works locally. Public rooms need a deployed HTTPS server URL.');
