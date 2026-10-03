@@ -51,3 +51,13 @@ The road, terrain, vehicles and camera share the same elevation functions in `pu
 `public/vehicle-models.js` builds original solid models: shaped car body and cabin, wheel rims, lamps and mirrors; bus windows and extra wheels; bike frame, engine, tires and rider; spaceship wings, canopy and thrusters. Lit surfaces have a small specular highlight. These are compact procedural models, not photorealistic scanned models or images. No model or texture downloads are needed.
 
 Run `node scripts/preview-3d.mjs` to project the real mesh and camera data into a CPU-rendered inspection image. This verifies geometry framing and depth; it does not verify browser shader compilation. WebGL appearance and phone performance still need a device test.
+
+
+### Vehicles and animals together (0.7.0)
+The garage now has nine choices: car, bike, bus, spaceship, fox, rabbit, bear, deer and elephant. Players can mix animals and vehicles in the same 1–10 player room, in Scenic Drive, Circuit or Endless Battle. Vehicles stay available. When you choose an animal, the phone pedals show Run and Slow. Keyboard bindings stay the same so you do not need to learn another control layout.
+
+The animals are original solid 3D models, with running or hopping legs, body bounce, tails, ears and eyes. `public/animal-models.js` builds and animates them. Each animal has a natural coat and a colored neck band for identifying players. The shared racer data remains in `public/vehicles.js`; an `animal` flag selects the animal model and camera height. `public/vehicle-models.js` forwards animal choices to that renderer while continuing to draw vehicles.
+
+Animal meshes use the existing road elevation, camera and multiplayer state. No model files, textures or image downloads are needed. The garage uses one shared preview renderer to avoid creating nine graphics contexts on a phone. Devices without WebGL still show a warning and a compatibility silhouette. Actual animal motion, visual quality and performance should be checked on an iPhone and Android device.
+
+To inspect geometry, run `node scripts/preview-3d.mjs fox` or use `rabbit`, `bear`, `deer`, `elephant` or a vehicle ID. This creates a CPU projection of the actual scene data, not a browser screenshot.

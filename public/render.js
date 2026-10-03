@@ -1,3 +1,4 @@
+import {drawAnimal2D} from './animal-models.js';
 import {roadCenter} from './endless.js';
 import {drawChase} from './chase.js';
 import {maps,headingAt,pointAt} from './maps.js';
@@ -7,7 +8,7 @@ const palette={ice:{ground:'#b5dfe9',road:'#6eafc9',edge:'#f1ffff',paint:'#f3fef
 function rr(c,x,y,w,h,r,fill){c.fillStyle=fill;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();}
 function line(c,points,color,width,close=true){c.beginPath();c.moveTo(...points[0]);for(let i=1;i<points.length;i++)c.lineTo(...points[i]);if(close)c.closePath();c.strokeStyle=color;c.lineWidth=width;c.lineJoin='round';c.lineCap='round';c.stroke();}
 function rand(i){return (Math.sin(i*127.1+311.7)*43758.5453)%1;}
-export function drawVehicle(c,p,{scale=1,time=0,preview=false}={}){
+export function drawVehicle(c,p,{scale=1,time=0,preview=false}={}){if(vehicles[p.vehicle]?.animal){drawAnimal2D(c,p,{scale,time});return;}
   const v=vehicles[p.vehicle]||vehicles.car,color=p.color||v.color;c.save();c.translate(p.x,p.y);c.rotate(p.angle||0);c.scale(scale,scale);
   // Vehicles face right. Shadows and highlights make the small silhouettes readable.
   c.save();c.translate(-2,5);rr(c,-v.length/2-2,-v.width/2-2,v.length+4,v.width+4,7,'#0005');c.restore();

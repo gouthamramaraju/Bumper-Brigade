@@ -1,5 +1,5 @@
-const CACHE='bumper-brigade-v8';
-const ASSETS=['./','./index.html','./style.css','./app.js','./physics.js','./maps.js','./vehicles.js','./render.js','./audio.js','./config.js','./joystick.js','./chase.js','./settings.js','./three-d.js','./endless.js','./landscape.js','./vehicle-models.js','./icon.svg','./manifest.json'];
+const CACHE='bumper-brigade-v9';
+const ASSETS=['./','./index.html','./style.css','./app.js','./physics.js','./maps.js','./vehicles.js','./render.js','./audio.js','./config.js','./joystick.js','./chase.js','./settings.js','./three-d.js','./endless.js','./landscape.js','./vehicle-models.js','./animal-models.js','./icon.svg','./manifest.json'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('bumper-brigade-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==self.location.origin||u.pathname.endsWith('/health'))return;e.respondWith(fetch(e.request).then(r=>{if(r.ok&&ASSETS.some(a=>new URL(a,self.location.href).pathname===u.pathname)){const copy=r.clone();e.waitUntil(caches.open(CACHE).then(c=>c.put(e.request,copy)));}return r;}).catch(()=>caches.match(e.request).then(r=>r||(e.request.mode==='navigate'?caches.match('./index.html'):new Response('Offline',{status:503})))));});

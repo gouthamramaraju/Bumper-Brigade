@@ -23,7 +23,7 @@ test('Real UI handlers: solo rounds, touch/keyboard, results, rooms and replay',
   try{
     await import('../public/app.js?ui-test');
     $('openSettings').click();assert.equal($('settingsSheet').hidden,false);$('cameraHeight').value='100';$('cameraHeight').dispatchEvent(new win.Event('input'));const fireKey=$('keyBindings').querySelector('[aria-label="fire key"]');fireKey.dispatchEvent(new win.KeyboardEvent('keydown',{key:'f',bubbles:true}));assert.equal(JSON.parse(win.localStorage.getItem('brigade-settings')).keys.fire,'f');$('closeSettings').click();assert.equal($('settingsSheet').hidden,true);
-    for(const vehicle of ['car','bike','bus','ship']){doc.querySelector(`[data-vehicle="${vehicle}"]`).click();assert.equal(doc.querySelector(`[data-vehicle="${vehicle}"]`).getAttribute('aria-pressed'),'true');}
+    for(const vehicle of ['car','bike','bus','ship','fox','rabbit','bear','deer','elephant']){doc.querySelector(`[data-vehicle="${vehicle}"]`).click();assert.equal(doc.querySelector(`[data-vehicle="${vehicle}"]`).getAttribute('aria-pressed'),'true');}
     for(const id of ['ice','beach','volcano']){doc.querySelector(`[data-map="${id}"]`).click();assert.equal(doc.querySelector(`[data-map="${id}"]`).getAttribute('aria-pressed'),'true');assert.ok([...$('lobbyMap').options].some(o=>o.value===id));}
     doc.querySelector('[data-map="ice"]').click();$('trackMode').value='circuit';$('trackMode').dispatchEvent(new win.Event('change'));$('solo').click();assert.equal($('race').hidden,false);frame();assert.equal($('raceOverlay').hidden,false);
     await new Promise(r=>setTimeout(r,3100));frame();assert.equal($('raceOverlay').hidden,true);

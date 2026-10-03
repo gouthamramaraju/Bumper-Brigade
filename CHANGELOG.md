@@ -1,5 +1,12 @@
 # Changes
 
+## 0.7.0
+- Keep all four vehicles and add fox, rabbit, bear, deer and elephant as selectable 3D runners.
+- Animated legs, ears, tails and elephant trunk, natural coats and player-colored neck bands.
+- Mix animals and vehicles in shared multiplayer rooms and all track modes.
+- Animal camera heights and Run / Slow phone labels.
+- One shared garage preview context and animal geometry tests.
+
 ## 0.6.0
 - Scenic Drive with rolling hills, road elevation and no timer, hazards, weapons or vehicle damage.
 - Cleaner scenic HUD and chase, hood or driver camera options.

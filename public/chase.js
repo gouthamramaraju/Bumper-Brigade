@@ -1,3 +1,4 @@
+import {drawAnimal2D} from './animal-models.js';
 // Perspective camera above and behind the driver. The server still uses the same 2D rules.
 import {maps,headingAt,pointAt} from './maps.js';
 import {vehicles} from './vehicles.js';
@@ -5,7 +6,7 @@ const themes={city:['#183346','#395663','#284039'],canyon:['#edb578','#f5d6ac','
 export function projectPoint(x,y,camera,w,h){const dx=x-camera.x,dy=y-camera.y,z=dx*Math.cos(camera.angle)+dy*Math.sin(camera.angle),side=-dx*Math.sin(camera.angle)+dy*Math.cos(camera.angle);if(z<16||z>1500)return null;const focal=Math.min(w,h)*.92*(camera.zoom||1);return{x:w/2+side*focal/z,y:h*.31+camera.height*focal/z,z,scale:focal/z};}
 function polygon(c,points,color){c.fillStyle=color;c.beginPath();c.moveTo(points[0].x,points[0].y);for(const p of points.slice(1))c.lineTo(p.x,p.y);c.closePath();c.fill();}
 function box(c,x,y,w,h,color,r=3){c.fillStyle=color;c.beginPath();c.roundRect(x,y,w,h,r);c.fill();}
-export function rearVehicle(c,p,x,y,size,time){
+export function rearVehicle(c,p,x,y,size,time){if(vehicles[p.vehicle]?.animal){drawAnimal2D(c,{...p,x,y,angle:-Math.PI/2},{scale:size/44,time});return;}
  const v=vehicles[p.vehicle],width=size*(p.vehicle==='bike'?.45:p.vehicle==='bus'?1.15:1),height=size*(p.vehicle==='bus'?.85:.55);c.save();c.translate(x,y);
  c.fillStyle='#0005';c.beginPath();c.ellipse(0,2,width*.65,size*.16,0,0,Math.PI*2);c.fill();
  if(p.vehicle==='ship'){polygon(c,[{x:-width*.8,y:0},{x:-width*.2,y:-height},{x:width*.2,y:-height},{x:width*.8,y:0}],p.color);box(c,-width*.18,-height*.8,width*.36,height*.45,'#b9ecff');c.fillStyle=p.input?.boost?'#b4ff64':'#74eaff';c.beginPath();c.ellipse(0,8,width*.13,12+Math.sin(time*33)*5,0,0,Math.PI*2);c.fill();}
