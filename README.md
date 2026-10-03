@@ -18,7 +18,7 @@ Open **http://localhost:8080**. Keep Terminal open. To stop the game, press Cont
 
 Pick a vehicle and map. Solo can include zero to nine computer drivers. To play with friends, create a room and share its six-character code. Everyone must use the same server address; a code alone cannot connect separate servers. Localhost works only on your own computer. On home Wi-Fi, others can use your computer's LAN address with port 8080. For internet play, deploy the server with HTTPS and WebSocket support: see [hosting](docs/HOSTING.md).
 
-Auto-drive is on initially: steer with A/D or left/right arrows. W/up accelerates, S/down brakes or reverses, Shift boosts, E drifts and Space fires. Phones use a circular thumb control: sideways steers, up accelerates, down brakes or reverses. Release returns to the auto-drive setting. Weapon, boost and drift remain separate. Auto-drive can be switched off. Escape pauses a solo race; online races continue for everyone. Sound starts off; enable it with the sound button.
+Auto-drive is on initially: steer with A/D or left/right arrows. W/up accelerates, S/down brakes or reverses, Shift boosts, E drifts and Space fires. Phones use a circular thumb control: sideways steers; separate Gas and Brake buttons sit on the right. Weapon, boost and drift remain separate. Auto-drive can be switched off. Escape pauses a solo race; online races continue for everyone. Sound starts off; enable it with the sound button.
 
 ## Rules
 

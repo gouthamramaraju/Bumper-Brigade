@@ -1,9 +1,10 @@
 # Changes
 
-## 0.3.1
+## 0.3.2
+Steering circle on the left; Gas and Brake on the right. Race fills the phone viewport, starts in map view and offers Full screen.
 
-Phone driving uses a circular joystick: sideways steers, up accelerates, down brakes or reverses. Releasing restores the auto-drive setting. Fire, boost and drift stay separate. Keyboard controls remain available. Cancellation and multiplayer input tests were added.
+## 0.3.1
+Initial circular touch control.
 
 ## 0.3.0
-
-Six maps, four vehicle choices, solo rivals and rooms for up to ten people.
+Six maps and rooms for ten players.

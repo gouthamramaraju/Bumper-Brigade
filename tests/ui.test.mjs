@@ -36,7 +36,8 @@ test('Real UI handlers: solo rounds, touch/keyboard, results, rooms and replay',
     $('start').click();await until(()=>app.rooms.get(code)?.status==='playing');await until(()=>!$('race').hidden);await until(()=>{frame();return $('raceOverlay').hidden;});
     const stick=$('joystick');stick.getBoundingClientRect=()=>({left:0,top:0,width:128,height:128});
     stick.dispatchEvent(new win.PointerEvent('pointerdown',{pointerId:8,clientX:108,clientY:20,cancelable:true}));await until(()=>app.rooms.get(code).match.players[0].input.steer>.5&&app.rooms.get(code).match.players[0].input.throttle>.5);
-    stick.dispatchEvent(new win.PointerEvent('pointermove',{pointerId:8,clientX:20,clientY:108,cancelable:true}));await until(()=>app.rooms.get(code).match.players[0].input.brake&&app.rooms.get(code).match.players[0].input.steer<-.5);
+    stick.dispatchEvent(new win.PointerEvent('pointermove',{pointerId:8,clientX:20,clientY:108,cancelable:true}));await until(()=>app.rooms.get(code).match.players[0].input.steer<-.5);assert.equal(app.rooms.get(code).match.players[0].input.brake,false);
+    const brake=doc.querySelector('[data-control=brake]');brake.dispatchEvent(new win.PointerEvent('pointerdown',{pointerId:9}));await until(()=>app.rooms.get(code).match.players[0].input.brake);brake.dispatchEvent(new win.PointerEvent('pointerup',{pointerId:9}));
     stick.dispatchEvent(new win.PointerEvent('pointerup',{pointerId:8}));await until(()=>app.rooms.get(code).match.players[0].input.steer===0);assert.equal(stick.classList.contains('pressed'),false);
     app.rooms.get(code).match.time=119.98;await until(()=>!$('results').hidden);$('again').click();assert.equal($('lobby').hidden,false);$('leaveLobby').click();await until(()=>app.rooms.size===0);
   }finally{

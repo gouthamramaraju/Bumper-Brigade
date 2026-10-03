@@ -16,7 +16,7 @@ Once deployment is verified, share the actual HTTPS game link with friends. Phon
 
 On iPhone Safari, use Share → Add to Home Screen. On Android Chrome, look for Add to Home screen or Install app in the browser menu; availability varies. A shortcut is optional: ordinary browser play works. Offline solo caching requires an initial HTTPS visit; online rooms always need internet.
 
-The circular control combines steering and pedals. Drag up for gas, down for brake/reverse and sideways to steer. While held, it overrides auto-drive; releasing restores your auto-drive setting.
+The circular control steers only. Gas and Brake are separate buttons on the right. Phone races fill the browser viewport and start in whole-map view. Use Follow view for close driving, or Full screen where supported. On iPhone, Add to Home Screen gives a standalone view.
 
 ## Small test checklist
 
