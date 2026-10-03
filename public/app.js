@@ -13,7 +13,7 @@ let preferences=loadSettings(localStorage),settingsOpen=false,pausedBeforeSettin
 const held=new Set(),pointers=new Map(),audio=new AudioFX();
 const joystick=mountJoystick($('joystick'),$('joystickKnob'));
 $('nickname').value=safe.get('brigade-name');$('serverUrl').value=config.serverUrl||safe.get('brigade-server');$('autoDrive').checked=safe.get('brigade-auto')!=='off';
-const fallbackRenderer=new Renderer($('arena')),demoRenderer=new Renderer($('demo'));let renderer=fallbackRenderer;try{renderer=new Renderer3D($('arena3d'));$('arena').hidden=true;}catch{ $('arena3d').hidden=true;toast('3D is unavailable on this device. Enable WebGL or try another browser.');}
+const fallbackRenderer=new Renderer($('arena')),demoRenderer=new Renderer($('demo'));let renderer=fallbackRenderer;try{renderer=new Renderer3D($('arena3d'));$('arena').hidden=true;}catch(error){console.error('3D startup:',error.message);$('arena3d').hidden=true;toast('3D is unavailable on this device. Enable WebGL or try another browser.');}
 $('trackMode').value=safe.get('brigade-mode')==='endless'?'endless':'circuit';$('trackMode').onchange=()=>safe.set('brigade-mode',$('trackMode').value);
 let demo=createDemo(mapId);
 function createDemo(id){return createMatch(id,[{id:'a',name:'Pocket',vehicle:'car',bot:true},{id:'b',name:'Tiny',vehicle:'bike',bot:true},{id:'c',name:'Bonk',vehicle:'bus',bot:true},{id:'d',name:'Oddity',vehicle:'ship',bot:true}],123,{duration:240,laps:99});}
