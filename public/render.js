@@ -1,3 +1,4 @@
+import {roadCenter} from './endless.js';
 import {drawChase} from './chase.js';
 import {maps,headingAt,pointAt} from './maps.js';
 import {vehicles} from './vehicles.js';
@@ -96,4 +97,4 @@ export class Renderer{
     c.restore();if(this.flash&&!overview){c.fillStyle=`rgba(255,216,142,${this.flash*.22})`;c.fillRect(0,0,w,h);}
   }
 }
-export function drawMinimap(c,s,me,width=160,height=106){const map=maps[s.mapId];c.clearRect(0,0,width,height);const scale=Math.min((width-10)/map.width,(height-10)/map.height);c.save();c.translate(5,5);c.scale(scale,scale);line(c,map.points,'#708085',60);for(const p of s.players){if(p.deadUntil)continue;c.fillStyle=p.id===me?'#ffffff':p.color;c.beginPath();c.arc(p.x,p.y,p.id===me?27:19,0,TAU);c.fill();}c.restore();}
+export function drawMinimap(c,s,me,width=160,height=106){if(s.mode==='endless'){c.clearRect(0,0,width,height);const mine=s.players.find(p=>p.id===me)||s.players[0];c.fillStyle='#708085';c.fillRect(width/2-15,0,30,height);for(const p of s.players){c.fillStyle=p.id===me?'#fff':p.color;c.beginPath();c.arc(width/2+(p.y-roadCenter(p.x))*.25,height*.7-(p.x-mine.x)*.06,4,0,Math.PI*2);c.fill();}return;}const map=maps[s.mapId];c.clearRect(0,0,width,height);const scale=Math.min((width-10)/map.width,(height-10)/map.height);c.save();c.translate(5,5);c.scale(scale,scale);line(c,map.points,'#708085',60);for(const p of s.players){if(p.deadUntil)continue;c.fillStyle=p.id===me?'#ffffff':p.color;c.beginPath();c.arc(p.x,p.y,p.id===me?27:19,0,TAU);c.fill();}c.restore();}

@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createMatch,step,setInput,explode,progress} from '../public/physics.js';
+import {roadCenter,roadAngle,endlessObstacles} from '../public/endless.js';
+test('Endless road continues beyond original map bounds without finishing laps',()=>{const s=createMatch('beach',[{id:'you',vehicle:'car'}],42,{mode:'endless',duration:1800});const p=s.players[0];p.x=20000;p.y=roadCenter(p.x);p.angle=roadAngle(p.x);p.vx=250;setInput(s,'you',{throttle:1});for(let i=0;i<60;i++)step(s,1/60);assert.ok(p.x>20000);assert.equal(p.finishedAt,null);assert.equal(p.lap,0);assert.ok(p.score>0);assert.ok(s.pickups.some(v=>v.x>20000));assert.ok(progress(s,p)>=20000);assert.equal(s.status,'playing');});
+test('Endless respawn stays near progress and time limit ends the round',()=>{const s=createMatch('city',[{id:'you',vehicle:'bus'}],42,{mode:'endless',duration:30});const p=s.players[0];p.x=10000;p.y=roadCenter(p.x);p.bestDistance=10000;explode(s,p);for(let i=0;i<181;i++)step(s,1/60);assert.equal(p.deadUntil,0);assert.ok(p.x>9800);assert.ok(Math.abs(p.y-roadCenter(p.x))<50);s.time=29.99;step(s,1/30);assert.equal(s.status,'finished');});
+test('Procedural obstacles repeat deterministically and remain near the generated road',()=>{const a=endlessObstacles(1000000);assert.deepEqual(a,endlessObstacles(1000000));assert.ok(a.length);for(const o of a)assert.ok(Math.abs(o.y-roadCenter(o.x))<=54);});

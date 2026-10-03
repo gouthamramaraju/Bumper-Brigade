@@ -1,5 +1,12 @@
 # Changes
 
+## 0.5.0
+- Real WebGL 3D vehicle meshes, lit scenery, depth testing and smooth chase camera.
+- Complete Circuit and procedural Endless modes, selected by the host in multiplayer.
+- Long viewing distance, natural horizon fade and 3D bird’s-eye view.
+- Endless distance checkpoints and progress-based respawns, with shared deterministic obstacles.
+- Tests and student documentation for both track modes.
+
 ## 0.4.0
 - Perspective chase view across six maps, with adjustable camera height, distance, angle and zoom.
 - Saved editable keyboard controls and reset option.

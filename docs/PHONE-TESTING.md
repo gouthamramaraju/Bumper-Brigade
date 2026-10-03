@@ -24,10 +24,20 @@ Try portrait and landscape, sound, left/right steering, brake, fire, boost and d
 
 
 ### Driving view and personal settings
-Races open in a view from behind your vehicle. The road, rivals and obstacles get smaller as they move farther away. This is drawn with Canvas; the game still uses the same small 2D physics engine. Map view switches back to the overhead view.
+Races open in real 3D from behind your vehicle. WebGL draws solid triangle meshes with lighting, depth testing and a smooth camera. The shared collision rules use ground coordinates, which keeps the server small. Map view switches back to the overhead view.
 
 Open Settings in the garage or during a race. Change camera height, distance, view angle and zoom. Select a keyboard field and press a new key to assign it. Each action needs a different key. Arrow keys also operate steering and pedals. Your choices are saved on this device. Reset restores the camera and keys. On phones the left circle steers, with Gas, Brake, Drift, Boost and Bonk on the right.
 
 Choose a time limit between 30 and 1800 whole seconds in the garage. In a friend room, only the host changes the shared limit before starting. This is the maximum time: three laps can finish the race earlier, with the existing 12-second finish countdown. Camera and keys are personal; they do not change other players' views. Settings pause solo races, while online races keep running.
 
-To replicate this feature, read `public/settings.js` for saved preferences and validation, `public/chase.js` for perspective drawing, `public/app.js` for screen controls, and `server.mjs` for the host's shared timer. Run `npm ci`, then `npm test`, then `npm start`.
+To replicate this feature, read `public/settings.js` for saved preferences and validation, `public/three-d.js` for 3D drawing, `public/app.js` for screen controls, and `server.mjs` for the host's shared timer. Run `npm ci`, then `npm test`, then `npm start`.
+
+
+### Circuit and Endless (0.5.0)
+Choose Track style in the garage. Circuit is a complete looping 3D course with three laps. Endless is a continuously generated, gently curving highway: keep driving until the selected timer ends. The six map choices set scenery and grip in both modes. The host chooses track style for the whole friend room; everyone still chooses their own vehicle.
+
+Endless does not have a finish line. Its distance display shows your farthest forward progress; distance checkpoints award points. Obstacles, weapons, collisions and three-second respawns still work. Respawns return near your progress. Bird’s-eye view gives an overhead 3D camera. The default driving camera shows the road stretching into the distance.
+
+The renderer is `public/three-d.js`: it builds small coloured meshes and sends their triangles to WebGL. It needs no 3D model or texture downloads. `public/endless.js` describes the road using simple sine curves and deterministic obstacle positions; the browser and server use the same functions. Circuit geometry is rendered in full. Endless renders a moving road window from behind the driver to far ahead, fading naturally into the horizon.
+
+Test both styles, turning and braking, every vehicle, settings, portrait and landscape. A device needs WebGL for 3D; unsupported devices show a warning and use the older 2D fallback. Physical iPhone and Android performance still needs testing.
