@@ -1,3 +1,4 @@
+import {mountJoystick} from './joystick.js';
 import {createMatch,setInput,step,standings,maps,vehicles} from './physics.js';
 import {playerColors,weaponNames} from './vehicles.js';
 import {Renderer,drawMap,drawVehicle,drawMinimap} from './render.js';
@@ -7,6 +8,7 @@ const $=id=>document.getElementById(id),views=['garage','lobby','race','results'
 const safe={get(k){try{return localStorage.getItem(k)||'';}catch{return '';}},set(k,v){try{localStorage.setItem(k,v);}catch{}}};
 let vehicle=vehicles[safe.get('brigade-vehicle')]?safe.get('brigade-vehicle'):'car',mapId=maps[safe.get('brigade-map')]?safe.get('brigade-map'):'city',view='garage',solo=false,match=null,room=null,me='you',socket=null,connecting=null,countdownAt=0,paused=false,focused=true,overview=false,lastAudioId=0;
 const held=new Set(),pointers=new Map(),audio=new AudioFX();
+const joystick=mountJoystick($('joystick'),$('joystickKnob'));
 $('nickname').value=safe.get('brigade-name');$('serverUrl').value=config.serverUrl||safe.get('brigade-server');$('autoDrive').checked=safe.get('brigade-auto')!=='off';
 const renderer=new Renderer($('arena')),demoRenderer=new Renderer($('demo'));
 let demo=createDemo(mapId);
@@ -41,8 +43,8 @@ function handle(data){if(data.type==='welcome'){me=data.id;return;}if(data.type=
  if(data.match){match=data.match;if(data.status==='playing'){countdownAt=0;if(view!=='race'){renderer.reset();showRace();}}else if(data.status==='finished'&&previous!=='finished')finish();}
 }
 function showRace(){show('race');overview=false;paused=false;$('overview').textContent='Map view';$('raceMap').textContent=maps[mapId].name.toUpperCase();$('raceMode').textContent=solo?`SOLO / ${match.players.length} RACERS`:`ROOM ${room.code} / ${room.players.length} RACERS`;$('pause').hidden=!solo;$('pause').textContent='Ⅱ Pause';$('raceAuto').textContent=`Auto-drive: ${$('autoDrive').checked?'on':'off'}`;$('raceOverlay').hidden=false;$('resume').hidden=true;updateHud();}
-function controls(){if(!focused||document.hidden||paused)return{steer:0,throttle:0,brake:false,drift:false,boost:false,fire:false};const reversing=held.has('brake');return{steer:(held.has('right')?1:0)-(held.has('left')?1:0),throttle:reversing?-.65:held.has('gas')||$('autoDrive').checked?1:0,brake:reversing,drift:held.has('drift'),boost:held.has('boost'),fire:held.has('fire')};}
-function clearInput(){held.clear();pointers.clear();for(const b of document.querySelectorAll('[data-control]'))b.classList.remove('pressed');if(solo&&match)setInput(match,me,{steer:0,throttle:0});else send({type:'input',steer:0,throttle:0});}
+function controls(){if(!focused||document.hidden||paused)return{steer:0,throttle:0,brake:false,drift:false,boost:false,fire:false};const stick=joystick.state,reversing=held.has('brake')||(stick.active&&stick.throttle<0);return{steer:held.has('right')||held.has('left')?(held.has('right')?1:0)-(held.has('left')?1:0):stick.steer,throttle:held.has('brake')?-.65:held.has('gas')?1:stick.active?(stick.throttle<0?stick.throttle*.65:stick.throttle):$('autoDrive').checked?1:0,brake:reversing,drift:held.has('drift'),boost:held.has('boost'),fire:held.has('fire')};}
+function clearInput(){joystick.reset();held.clear();pointers.clear();for(const b of document.querySelectorAll('[data-control]'))b.classList.remove('pressed');if(solo&&match)setInput(match,me,{steer:0,throttle:0});else send({type:'input',steer:0,throttle:0});}
 const keys={ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',ArrowUp:'gas',w:'gas',ArrowDown:'brake',s:'brake',Shift:'boost',e:'drift',' ':'fire'};
 window.addEventListener('keydown',e=>{if(view!=='race'||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;const key=keys[e.key]||keys[e.key.toLowerCase()];if(key){e.preventDefault();held.add(key);}if(e.key==='Escape'&&solo)togglePause();});
 window.addEventListener('keyup',e=>{const key=keys[e.key]||keys[e.key.toLowerCase()];if(key)held.delete(key);});

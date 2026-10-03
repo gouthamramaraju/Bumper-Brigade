@@ -6,6 +6,7 @@ Think of the game as three jobs: remember what is happening, draw it, and listen
 | --- | --- |
 | `public/index.html` | The garage, buttons, lobby and score screens |
 | `public/style.css` | Colours, spacing and phone layouts |
+| `public/joystick.js` | Convert thumb drags into steering, gas and brake; release on cancellation |
 | `public/app.js` | Connect buttons and keys to the game; run solo play |
 | `public/vehicles.js` | Each vehicle's speed, strength, size and turning ability |
 | `public/maps.js` | Track corners, obstacles and collectible locations |

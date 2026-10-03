@@ -12,4 +12,4 @@ ARCADE_SERVER_URL=https://your-server.example APP_ID=com.yourname.bumperbrigade 
 
 Set server `ALLOWED_ORIGINS` to `capacitor://localhost,https://localhost` for these native clients. Browser clients on the server's own address are accepted automatically. Do not use wildcards unnecessarily. HTTPS is required for service-worker offline caching; solo works offline after an initial secure load. Online rooms always need a live server.
 
-The Dockerfile is included. Hosting price depends on the provider and traffic; no hosting account or paid plan has been purchased or deployed. Before public launch, inspect host logs, configure resource limits and exercise ten simultaneous clients through the actual HTTPS endpoint.
+The Dockerfile is included. The live game is deployed on Railway at https://bumper-brigade-production.up.railway.app. Hosting price depends on your Railway plan and usage. Before public launch, inspect host logs, configure resource limits and exercise ten simultaneous clients through the actual HTTPS endpoint.

@@ -8,7 +8,7 @@ import {WebSocketServer,WebSocket} from 'ws';
 import {createMatch,setInput,step,maps,vehicles} from './public/physics.js';
 const publicRoot=fileURLToPath(new URL('./public/',import.meta.url));
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.json':'application/json'};
-const allowedFiles=new Set(['index.html','style.css','app.js','physics.js','maps.js','vehicles.js','render.js','audio.js','icon.svg','manifest.json','sw.js','config.js']);
+const allowedFiles=new Set(['index.html','style.css','app.js','physics.js','maps.js','vehicles.js','render.js','audio.js','icon.svg','manifest.json','sw.js','config.js','joystick.js']);
 export function createArcadeServer({maxRooms=100,maxConnections=1000,allowedOrigins=[]}={}){
   const rooms=new Map(),clients=new Set(),byIp=new Map();
   const server=http.createServer(async(req,res)=>{

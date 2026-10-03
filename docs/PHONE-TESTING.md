@@ -16,6 +16,8 @@ Once deployment is verified, share the actual HTTPS game link with friends. Phon
 
 On iPhone Safari, use Share → Add to Home Screen. On Android Chrome, look for Add to Home screen or Install app in the browser menu; availability varies. A shortcut is optional: ordinary browser play works. Offline solo caching requires an initial HTTPS visit; online rooms always need internet.
 
+The circular control combines steering and pedals. Drag up for gas, down for brake/reverse and sideways to steer. While held, it overrides auto-drive; releasing restores your auto-drive setting.
+
 ## Small test checklist
 
 Try portrait and landscape, sound, left/right steering, brake, fire, boost and drift. Test a collision, a three-second respawn and a replay. Switch apps briefly and check that controls release. If disconnected, leave and rejoin between rounds; a disconnected race cannot resume.
